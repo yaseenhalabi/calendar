@@ -95,11 +95,13 @@ def logout():
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json() 
+    firstName = data.get('firstName')
+    lastName = data.get('lastName')
     username = data.get('username')
     password = data.get('password')
 
-    if not username or not password:
-        return 'Missing username or password', 400
+    if not username or not password or not firstName or not lastName:
+        return 'Missing credentials', 400
 
     # Check if the username already exists in the database
     existing_user = collection.find_one({'username': username})
@@ -111,6 +113,9 @@ def register():
     user_id = collection.insert_one({
         'username': username,
         'password_hash': generate_password_hash(password),
+        'firstName': firstName,
+        'lastName': lastName,
+        'user_id': current_user.get_id()
     }).inserted_id
 
     user = User.get(user_id)

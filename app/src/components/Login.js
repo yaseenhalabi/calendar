@@ -8,7 +8,8 @@ const Login = () => {
         username: '',
         password: '',
     });
-
+    const [error, setError] = useState()
+ 
     const handleInputChange = (e) => {
         setLoginInfo({
                 ...loginInfo,
@@ -24,7 +25,12 @@ const Login = () => {
             navigate('/')
         }
         catch(e){
-            console.log(e)
+            var exception = e.response.status
+            if(exception == 401)
+                setError("ERROR 401: INCORRECT USERNAME OR PASSWORD")
+            else{
+                setError("ERROR 500: SERVER RELATED ISSUE")
+            }
         }
     };
 
@@ -72,13 +78,14 @@ const Login = () => {
                 </div>
 
                 <div>
-                <button
-                    type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                    Sign In
-                </button>
+                    <button
+                        type="submit"
+                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        Sign In
+                    </button>
                 </div>
+                {error && <div className='text-red-600 text-center'>{error}</div>}
             </form>
             <div className="text-center mt-2">
                 <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">

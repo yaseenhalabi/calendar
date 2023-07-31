@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
-
+import React, { useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 const Register = () => {
+    const navigate = useNavigate()
     const [registerInfo, setRegisterInfo] = useState({
         firstName: '',
         lastName: '',
         username: '',
         password: '',
     });
-
+    const [error, setError] = useState()
     const handleInputChange = (e) => {
         setRegisterInfo({
             ...registerInfo,
@@ -15,11 +17,20 @@ const Register = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const api_uri = "http://127.0.0.1:5000"
+    const handleSubmit = async(e) => {
         e.preventDefault();
-        // Handle form submission here
-        console.log(registerInfo);
-    };
+        try{
+            const data = await axios.post(api_uri+"/register", registerInfo, {withCredentials: true})
+            console.log(data)
+            navigate('/')
+        }
+        catch(e){
+            setError("ERROR 500: SERVER RELATED ISSUE")
+        }
+    }
+    console.log(registerInfo);
+    
 
     return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
